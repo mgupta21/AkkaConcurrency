@@ -18,8 +18,11 @@ class Plane extends Actor with ActorLogging {
 
   // to create a supervised child actor from within an actor use context.actorOf
   // to create a top level actor from the ActorSystem use system.actorOf
+  /*val altimeter = context.actorOf(
+    Props[Altimeter], "Altimeter")*/
   val altimeter = context.actorOf(
-    Props[Altimeter], "Altimeter")
+    Props(Altimeter()), "Altimeter")
+
   val controls = context.actorOf(
     Props(new ControlSurfaces(altimeter)), "ControlSurfaces")
 

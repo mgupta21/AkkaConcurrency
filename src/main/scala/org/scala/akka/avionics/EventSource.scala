@@ -12,6 +12,13 @@ object EventSource {
 }
 
 trait EventSource {
+  def sendEvent[T](event: T): Unit
+
+  def eventSourceReceive: Actor.Receive
+}
+
+trait ProductionEventSource extends EventSource {
+  // We have constraint this trait to be only extended by Actors
   this: Actor =>
 
   import EventSource._
@@ -34,4 +41,5 @@ trait EventSource {
         _ != listener
       }
   }
+
 }

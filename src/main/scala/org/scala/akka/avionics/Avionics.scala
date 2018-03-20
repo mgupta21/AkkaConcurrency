@@ -47,3 +47,13 @@ object Avionics {
     }
   }
 }
+
+// Tell Syntax
+// def ! (message: Any)(implicit sender: ActorRef = null): Unit
+
+// Forward Syntax
+// If A sends to B and B forwards that message to C, then C sees the sender of the message as A, not B.
+// def forward (message: Any)(implicit context: ActorContext): Unit
+
+// def forward(message: Any)(implicit context: ActorContext) =
+//    tell(message, context.sender)
