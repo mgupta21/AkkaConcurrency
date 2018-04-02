@@ -1,6 +1,6 @@
 package org.scala.akka.avionics
 
-import akka.actor.{Actor, ActorLogging, Props}
+import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import org.scala.akka.avionics.Altimeter.AltitudeUpdate
 import org.scala.akka.avionics.EventSource.RegisterListener
 
@@ -8,6 +8,8 @@ object Plane {
 
   // Returns the control surface to the Actor that asks for them
   case object GiveMeControl
+
+  case class Controls(controls: ActorRef)
 
 }
 
@@ -29,7 +31,8 @@ class Plane extends Actor with ActorLogging {
   def receive = {
     case GiveMeControl =>
       log info ("Plane giving control.")
-      sender ! controls
+      // Bad idea to directly send ActorRef, wrap it in the case class
+      sender ! Controls(controls)
     case AltitudeUpdate(altitude) =>
       log info (s"Altitude is now: $altitude")
   }

@@ -1,7 +1,6 @@
 package org.scala.akka.avionics
 
 import akka.actor.{Actor, ActorLogging}
-import org.scala.akka.avionics.EventSource.{RegisterListener, UnregisterListener}
 
 // The duration package object extends Ints with some timing functionality
 import scala.concurrent.duration._
@@ -58,7 +57,7 @@ class Altimeter extends Actor with ActorLogging /*with EventSource*/ {
     // various aspects of your application merely generate events and other aspects of your application react to those events.
     case RateChange(amount) =>
       // Truncate the range of 'amount' to [-1, 1] before multiplying
-      rateOfClimb = amount.(1.0f).max(-1.0fmin) * maxRateOfClimb
+      rateOfClimb = amount.min(1.0f).max(1.0f) * maxRateOfClimb
       log info (s"Altimeter changed rate of climb to $rateOfClimb.")
 
     // Calculate a new altitude

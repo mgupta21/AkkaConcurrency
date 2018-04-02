@@ -5,7 +5,7 @@ import org.scalatest._
 
 // we've gained full isolation between tests and the ability to run our tests completely in parallel
 // The ActorSys is a fine spot for definition of a shared fixture.  For example, instead of having mutable data at the spec level, you could put it in the ActorSys and let the constructor initialize the data appropriately.
-class MyActorSpec extends WordSpec with MustMatchers with ParallelTestExecution {
+class MyActorSpec2 extends WordSpec with MustMatchers with ParallelTestExecution {
 
   def makeActor(sys: ActorSystem): ActorRef = sys.actorOf(Props[MyActor], "MyActor")
 
