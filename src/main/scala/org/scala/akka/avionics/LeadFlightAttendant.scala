@@ -33,6 +33,7 @@ class LeadFlightAttendant extends Actor {
 
   // After we've successfully spooled up the LeadFlightAttendant, we're going to have it create all of its subordinates
   override def preStart() {
+    // context.system helps us access the actor context access the system
     val attendantNames = context.system.settings.config.getStringList("zzz.akka.avionics.flightcrew.attendantNames").asScala
     attendantNames take numberOfAttendants foreach { name =>
       // We create the actors within our context such that they are children of this Actor

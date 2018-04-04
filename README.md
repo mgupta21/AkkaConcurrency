@@ -37,3 +37,11 @@ The difference here, of course, is that these newly created actors are children 
 
 5) State When accessing self or sender from the actor, we're actually getting that information from the ActorContext;
 
+if you have an ActorPath, then you can get the ActorRef using the ActorSystem, and if you have an ActorContext, you can get the children and parent ActorRefs directly
+
+# SUPERVISOR
+A supervisor is the aspect of an actor that takes care of its children. A piece of code governs this aspect and specifies the decisions it needs to make when children get injured.
+## Decider directives
+The output of your Decider is a directive that tells the supervisor logic what it should do with your child or children
+Stop, Resume, Escalate, Restart
+

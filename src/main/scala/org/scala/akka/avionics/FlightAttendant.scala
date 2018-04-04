@@ -14,6 +14,8 @@ trait AttendantResponsiveness {
 
 object FlightAttendant {
 
+  val maxResponseTimeMS = 300000
+
   case class GetDrink(drinkname: String)
 
   case class Drink(drinkname: String)
@@ -26,7 +28,7 @@ object FlightAttendant {
 }
 
 class FlightAttendant extends Actor {
-  // FlightAttendant self-types to the AttendantResponsiveness, but the abstract val maxResponseTimeMS is 9O0defined here
+  // FlightAttendant self-types to the AttendantResponsiveness, but the abstract val maxResponseTimeMS is not defined here
   // Scala looks to companion object to resolve it
   this: AttendantResponsiveness =>
 
@@ -38,6 +40,7 @@ class FlightAttendant extends Actor {
   def receive = {
     case GetDrink(drinkname) =>
       // We don't respond right away, but use the scheduler to ensure we do eventually
+      // context.system helps us access the actor context access the system
       context.system.scheduler.scheduleOnce(responseDuration, sender, Drink(drinkname))
   }
 }

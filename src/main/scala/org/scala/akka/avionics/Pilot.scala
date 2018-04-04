@@ -47,3 +47,7 @@ class Copilot extends Actor {
       autopilot = context.child("../Autopilot").get
   }
 }
+
+class Autopilot extends Actor {
+  override def receive: Receive = Actor.emptyBehavior
+}

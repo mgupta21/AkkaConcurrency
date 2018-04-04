@@ -2,7 +2,6 @@ package org.scala.akka.avionics
 
 import akka.actor.{Actor, ActorLogging, ActorRef, Props}
 import org.scala.akka.avionics.Altimeter.AltitudeUpdate
-import org.scala.akka.avionics.EventSource.RegisterListener
 
 object Plane {
 
@@ -18,15 +17,18 @@ class Plane extends Actor with ActorLogging {
 
   import Plane._
 
+  val cfgstr = "zzz.akka.avionics.flightcrew"
+
   // to create a supervised child actor from within an actor use context.actorOf
   // to create a top level actor from the ActorSystem use system.actorOf
-  /*val altimeter = context.actorOf(
-    Props[Altimeter], "Altimeter")*/
-  val altimeter = context.actorOf(
-    Props(Altimeter()), "Altimeter")
-
-  val controls = context.actorOf(
-    Props(new ControlSurfaces(altimeter)), "ControlSurfaces")
+  // Since we are using context.actorOf to create actors instead of system.actorOf these actors are child of plane actor
+  val altimeter = context.actorOf(Props(Altimeter()), "Altimeter")
+  val controls = context.actorOf(Props(new ControlSurfaces(altimeter)), "ControlSurfaces")
+  val config = context.system.settings.config
+  val pilot = context.actorOf(Props[Pilot], config.getString(s"$cfgstr.pilotName"))
+  val copilot = context.actorOf(Props[Copilot], config.getString(s"$cfgstr.copilotName"))
+  val autopilot = context.actorOf(Props[Autopilot], "Autopilot")
+  val flightAttendant = context.actorOf(Props(LeadFlightAttendant()), config.getString(s"$cfgstr.leadAttendantName"))
 
   def receive = {
     case GiveMeControl =>
@@ -38,7 +40,12 @@ class Plane extends Actor with ActorLogging {
   }
 
   override def preStart() {
-    altimeter ! RegisterListener(self)
+    // Register ourself with the Altimeter to receive updates
+    // on our altitude
+    altimeter ! EventSource.RegisterListener(self)
+    List(pilot, copilot) foreach {
+      _ ! Pilots.ReadyToGo
+    }
   }
 
 }
