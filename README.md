@@ -40,8 +40,13 @@ The difference here, of course, is that these newly created actors are children 
 if you have an ActorPath, then you can get the ActorRef using the ActorSystem, and if you have an ActorContext, you can get the children and parent ActorRefs directly
 
 # SUPERVISOR
+- If our code throws an exception, then that immediately kicks in the supervisory behaviour. Depending on what we decide to do, our actor could be restarted, resumed, or stopped.
 A supervisor is the aspect of an actor that takes care of its children. A piece of code governs this aspect and specifies the decisions it needs to make when children get injured.
 ## Decider directives
 The output of your Decider is a directive that tells the supervisor logic what it should do with your child or children
 Stop, Resume, Escalate, Restart
+
+- Using preRestart and postRestart, you can gain access to the exception that caused the failure and to the message that was being processed during that failure.
+- If the actor being restarted is high up in the actor hierarchy, and its children restart, then the restarts will propagate all the way down the tree.
+- Default behaviour of restarting children is really a proper default. It's just a default behaviour that becomes less desirable the higher up the hierarchy you travel.
 

@@ -17,6 +17,10 @@ object Altimeter {
 
 }
 
+trait AltimeterProvider {
+  def newAltimeter: Actor = Altimeter()
+}
+
 class Altimeter extends Actor with ActorLogging /*with EventSource*/ {
 
   // Altimeter self-types to the EventSource
