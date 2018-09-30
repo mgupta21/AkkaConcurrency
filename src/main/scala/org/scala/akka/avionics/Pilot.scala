@@ -28,7 +28,7 @@ class Pilot extends Actor {
   // Although we can find actors using either the ActorContext or ActorSystem, in the case of the pilots, we'll use the ActorContext.
   def receive = {
     case ReadyToGo =>
-      context.parent ! 
+      context.parent ! GiveMeControl
       // it can ask the actor's context for its siblings
       copilot = context.child("../" + copilotName).get
       autopilot = context.child("../Autopilot").get
